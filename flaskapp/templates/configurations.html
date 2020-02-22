@@ -1,0 +1,11 @@
+{% extends 'layout.html' %} {% block body %}
+<h1>Configurations</h1>
+<hr />
+<ul class="list-group">
+  {% for configuration in configurations %}
+  <li class="list-group-item">
+    <a href="/configuration/{{configuration.id}}">{{configuration.title}}</a>
+  </li>
+  {% endfor %}
+</ul>
+{% endblock %}
