@@ -4,6 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from wtforms import Form, StringField, TextAreaField, PasswordField, validators
 from passlib.hash import sha256_crypt
 
+
 app = Flask(__name__)
 
 Configurations = Configurations()
@@ -42,6 +43,7 @@ class RegisterForm(Form):
 def register():
     form = RegisterForm(request.form)
     if request.method == 'POST' and form.validate():
+
         return render_template('register.html')
     return render_template('register.html', form=form)
 
