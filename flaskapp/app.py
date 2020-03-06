@@ -3,11 +3,13 @@ from data import Configurations
 from flask_sqlalchemy import SQLAlchemy
 from wtforms import Form, StringField, TextAreaField, PasswordField, validators
 from passlib.hash import sha256_crypt
+from database import Database
 
 
 app = Flask(__name__)
 
 Configurations = Configurations()
+db = Database()
 
 
 @app.route('/')
@@ -43,6 +45,10 @@ class RegisterForm(Form):
 def register():
     form = RegisterForm(request.form)
     if request.method == 'POST' and form.validate():
+        name = form.name.data
+        email = form.email.data
+        username = form.username.data
+        password = sha256_crypt.encrypt(str(form.password.data))
 
         return render_template('register.html')
     return render_template('register.html', form=form)
