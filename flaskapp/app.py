@@ -8,6 +8,8 @@ app = Flask(__name__)
 
 # postgres
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///envecho'
+# debug
+app.debug = True
 db = SQLAlchemy(app)
 
 Configurations = Configurations()
@@ -15,16 +17,18 @@ Configurations = Configurations()
 # postgres
 
 
-class User(db.Model):
+class Users(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80))
     username = db.Column(db.String(80), unique=True)
     email = db.Column(db.String(120), unique=True)
+    password = db.Column(db.String(120))
 
-    def __init__(self, name, username, email):
+    def __init__(self, name, username, email, password):
         self.name = name
         self.username = username
         self.email = email
+        self.password = password
 
     def __repr__(self):
         return '<User %r' % self.username
@@ -64,11 +68,16 @@ def register():
     form = RegisterForm(request.form)
     if request.method == 'POST' and form.validate():
         name = form.name.data
-        email = form.email.data
         username = form.username.data
-        password = sha256_crypt.encrypt(str(form.password.data))
+        email = form.email.data
+        password = sha256_crypt.hash(str(form.password.data))
 
-        return render_template('register.html')
+        user = Users(request.form['name'], request.form['username'], request.form['email'],
+                     request.form[password])
+        db.session.add(user)
+        db.session.commit()
+
+        return render_template('register.html', form=form)
     return render_template('register.html', form=form)
 
 
