@@ -5,7 +5,6 @@ from wtforms import Form, StringField, TextAreaField, PasswordField, validators
 from passlib.hash import sha256_crypt
 from database import Database
 
-
 app = Flask(__name__)
 
 Configurations = Configurations()

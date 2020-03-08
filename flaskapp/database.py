@@ -15,6 +15,6 @@ class Database():
         for data in fetchQuery.fetchall():
             print(data)
 
-    def createUser(self, query):
+    def createUser(self, userInfo):
         register = self.connection.execute(
-            "INSERT INTO users (name, email, username, password) VALUES ($1, $2, $3, $4) RETURNING id ")
+            "INSERT INTO users (name, email, username, password) VALUES () RETURNING id ")
