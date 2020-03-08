@@ -1,14 +1,33 @@
 from flask import Flask, render_template, flash, redirect, url_for, session, logging, request
-from data import Configurations
 from flask_sqlalchemy import SQLAlchemy
+from data import Configurations
 from wtforms import Form, StringField, TextAreaField, PasswordField, validators
 from passlib.hash import sha256_crypt
-from database import Database
 
 app = Flask(__name__)
 
+# postgres
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///envecho'
+db = SQLAlchemy(app)
+
 Configurations = Configurations()
-db = Database()
+
+# postgres
+
+
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(80))
+    username = db.Column(db.String(80), unique=True)
+    email = db.Column(db.String(120), unique=True)
+
+    def __init__(self, name, username, email):
+        self.name = name
+        self.username = username
+        self.email = email
+
+    def __repr__(self):
+        return '<User %r' % self.username
 
 
 @app.route('/')
