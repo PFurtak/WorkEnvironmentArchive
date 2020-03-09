@@ -59,7 +59,7 @@ class RegisterForm(Form):
     username = StringField('Username', [validators.Length(min=4, max=25)])
     email = StringField('Email', [validators.Length(min=6, max=50)])
     password = PasswordField('Password', [validators.DataRequired(
-    ), validators.EqualTo('confirm', message='invalid credentials')])
+    ), validators.EqualTo('confirm', message='Password does not match')])
     confirm = PasswordField('Confirm Password')
 
 
@@ -73,13 +73,16 @@ def register():
         password = sha256_crypt.hash(str(form.password.data))
 
         user = Users(request.form['name'], request.form['username'], request.form['email'],
-                     request.form[password])
+                     request.form['password'])
         db.session.add(user)
         db.session.commit()
 
-        return render_template('register.html', form=form)
+        flash('Registration successful!')
+
+        return redirect(url_for('index'))
     return render_template('register.html', form=form)
 
 
 if __name__ == '__main__':
+    app.secret_key = 'RADAF'
     app.run()
